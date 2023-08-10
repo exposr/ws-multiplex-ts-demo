@@ -1,0 +1,24 @@
+{
+    "name": "ws-multiplex-ts-demo",
+    "description": "Websocket channel multiplexer demo",
+    "version": "1.0.0",
+    "author": "Fredrik Lindberg <fli@fli.dev>",
+    "license": "MIT",
+    "type": "commonjs",
+    "engines": {
+        "node": ">=18"
+    },
+    "devDependencies": {
+        "@types/node": "^20.4.9",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.1.6"
+    },
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -fr dist"
+    },
+    "dependencies": {
+        "@exposr/ws-multiplex": "^1.0.0",
+        "@types/ws": "^8.5.5"
+    }
+}
