@@ -2,6 +2,7 @@ import http, { RequestOptions } from 'node:http';
 import { WebSocketServer } from 'ws';
 import WebSocketMultiplex from '@exposr/ws-multiplex';
 import { Socket } from 'node:net';
+import { Duplex } from 'node:stream';
 
 let wsm: WebSocketMultiplex | undefined;
 
@@ -13,31 +14,26 @@ const requestHandler = (request: http.IncomingMessage, response: http.ServerResp
         return;
     }
 
-    const sock = wsm.createConnection({}, () => {
-        const headers = { ...request.headers };
-        delete headers['host'];
+    const headers = { ...request.headers };
+    delete headers['host'];
 
-        const requestOptions: RequestOptions = {
-            path: request.url,
-            method: request.method,
-            headers: request.headers,
-            createConnection: (): Socket => {
-                return <Socket>sock;
-            }
-        };
+    const requestOptions: RequestOptions = {
+        path: request.url,
+        method: request.method,
+        headers: request.headers,
+        createConnection: (options: object, callback: (err: Error, sock: Socket) => void): Socket => {
+            return (<any>wsm).createConnection({}, (err: Error, sock: Duplex) => {
+                callback(<any>err, <Socket>sock);
+            });
+        }
+    };
 
-        const clientReq = http.request(requestOptions, (res) => {
-            response.writeHead(<number>res.statusCode, res.headers);
-            res.pipe(response);
-        });
-
-        request.pipe(clientReq);
+    const clientReq = http.request(requestOptions, (res) => {
+        response.writeHead(<number>res.statusCode, res.headers);
+        res.pipe(response);
     });
 
-    sock.on('error', (err: Error) => {
-        response.statusCode = 502;
-        response.end(err.message);
-    });
+    request.pipe(clientReq);
 }
 
 const httpServer = http.createServer(requestHandler);
