@@ -9,10 +9,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@exposr/ws-multiplex@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@exposr/ws-multiplex/-/ws-multiplex-1.1.0.tgz#f1886fce0c49156aea39625bfeb1084752282aa5"
-  integrity sha512-wd/y6s5wzZsZZcV2FS3P7jG1+wBYa5ywq4ZmzBmLH15QXVkY9XsQszlrgegWPjOIfcWUpOH9eMgnDYwOCKgbYw==
+"@exposr/ws-multiplex@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@exposr/ws-multiplex/-/ws-multiplex-1.2.0.tgz#2f105e25923f5dc5c3f496d2b2b4cc118db50a8f"
+  integrity sha512-Eb0LKX50NeQ9xzEthHbJNUhlbHilcg1Ppo6CzzENrEnq8mKccDfoVPQH2lS5K5q75SqXVHRZQiZFAzCsZneMLA==
   dependencies:
     bufferutil "^4.0.7"
     ws "^8.13.0"

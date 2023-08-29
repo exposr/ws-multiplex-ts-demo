@@ -18,7 +18,7 @@
         "clean": "rm -fr dist"
     },
     "dependencies": {
-        "@exposr/ws-multiplex": "^1.1.0",
+        "@exposr/ws-multiplex": "^1.2.0",
         "@types/ws": "^8.5.5"
     }
 }

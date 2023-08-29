@@ -24,11 +24,6 @@ const connect = (port: number): Promise<WebSocket> => {
 
     const wsm = new WebSocketMultiplex(ws);
     wsm.on("connection", (sock: WebSocketMultiplexSocket) => {
-        console.log(`Multiplex channel connected, forwarding to 127.0.0.1:20000`);
-        sock.on('close', () => {
-            console.log("Channel closed");
-        });
-
         const targetSock = new net.Socket();
         targetSock.connect({
             host: 'localhost',
@@ -41,10 +36,30 @@ const connect = (port: number): Promise<WebSocket> => {
         const close = () => {
             targetSock.unpipe(sock);
             sock.unpipe(targetSock);
-            targetSock.destroy();
             sock.destroy();
+            targetSock.destroy();
         };
+
         targetSock.on('close', close);
         sock.on('close', close);
+        sock.on('error', () => {
+            close();
+        });
+        targetSock.on('error', () => {
+            close();
+        });
     });
+
+    wsm.on('close', () => {
+        wsm.destroy();
+        ws.terminate();
+    });
+
+    process.on('SIGUSR1', () => {
+        const diag = wsm.diagnostics();
+        const mem = process.memoryUsage();
+        console.log(`open_chan=${diag.openChannels} read=${diag.bytesRead} written=${diag.bytesWritten}`);
+        console.log(`rss=${mem.rss} arrayBuffers=${mem.arrayBuffers}`);
+    });
+
 })();
